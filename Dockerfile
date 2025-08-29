@@ -12,4 +12,5 @@ COPY . .
 EXPOSE 8080
 
 # run Flask dev server
-CMD ["python", "app.py"]
+# CMD ["python", "app.py"]
+CMD ["gunicorn", "-w", "2", "-k", "gthread", "-b", "0.0.0.0:8080", "app:create_app()"]
