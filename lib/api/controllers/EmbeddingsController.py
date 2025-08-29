@@ -1,6 +1,7 @@
 from lib.api import api_bp
 from lib.utils.utils import error_response
 from lib.api.models.EmbeddingsAPIModels import EmbeddingsBulkRequest, SimilarityRequest, SearchRequest
+from lib.services.embeddings_service import embed_passage, embed_passages, similarity, search, get_provider
 
 from flask import request
 from pydantic import ValidationError
@@ -9,6 +10,16 @@ from pydantic import ValidationError
 def ping():
     return {"message": "pong"}, 200
 
+# readiness probe for provider
+@api_bp.get("/ready")
+def ready():
+    provider = get_provider()
+    return {
+        "provider": provider.name or "Unknown",
+        "loaded": provider.loaded,
+        "dim": provider.dim or 0,
+    }, 200
+
 # GET /embeddings
 # query param: sentence
 @api_bp.get("/embeddings")
@@ -16,8 +27,9 @@ def get_embedding():
     sentence = request.args.get("sentence", type=str)
     if not sentence:
         return error_response(400, "Missing required query parameter 'sentence'.")
-    # placeholder response
-    return {"embedding": [0.0, 0.0, 0.0]}, 200
+    embedding = embed_passage(sentence)
+
+    return {"embedding": embedding}, 200
 
 # POST /embeddings/bulk
 # payload: JSON with list of strings "sentences"
@@ -31,9 +43,8 @@ def post_bulk():
     except ValidationError as validation_error:
         return error_response(400, "Payload validation failed", validation_error.errors())
 
+    embeddings = embed_passages(data.sentences)
 
-    embeddings = [[0.0, 0.0, 0.0] for _ in data.sentences]
-    # placeholder response
     return {"embeddings": embeddings}, 200
 
 # POST /embeddings/similarity
@@ -48,8 +59,9 @@ def post_similarity():
     except ValidationError as validation_error:
         return error_response(400, "Payload validation failed", validation_error.errors())
 
-    # placeholder response
-    return {"similarity": 0.0}, 200
+    similarity_score = similarity(data.sentence_1, data.sentence_2)
+
+    return {"similarity": similarity_score}, 200
 
 # POST /embeddings/search
 @api_bp.post("/embeddings/search")
@@ -63,6 +75,6 @@ def post_search():
     except ValidationError as validation_error:
         return error_response(400, "Payload validation failed", validation_error.errors())
 
-    # placeholder response
-    top = data.sentences[0] if data.sentences else ""
-    return {"top_result": top, "similarity": 0.0}, 200
+    top_result, similarity_score = search(data.query, data.sentences)
+
+    return {"top_result": top_result, "similarity":similarity_score}, 200

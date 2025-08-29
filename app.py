@@ -2,6 +2,8 @@ from flask import Flask
 from lib.api import api_bp
 from config import Config
 from lib.api.errors import register_error_handlers
+from dotenv import load_dotenv
+load_dotenv()  # loads .env
 
 def create_app(config_class: type = Config):
     app = Flask(__name__)
