@@ -1,7 +1,7 @@
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# prefix "query: " and "passage: " to input texts?
+# prefix "query: " and "passage: " to input texts
 class E5Provider:
     def __init__(self, model_name, device = "cpu"):
         self.name = "e5:" + model_name

@@ -4,3 +4,4 @@ api_bp = Blueprint("api", __name__)
 
 # routes
 from .controllers import EmbeddingsController
+from .controllers import OpenAPIController

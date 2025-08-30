@@ -11,5 +11,5 @@ class Config:
     EMBEDDING_DEVICE = os.getenv("EMBEDDING_DEVICE", "cpu") # "cpu" or "cuda"
 
     # Safety net to reject large requests
-    MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", str(2 * 1024 * 1024))) # in bytes
+    MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", str(2 * 1024 * 1024)))
     MAX_BULK_SENTENCES = int(os.getenv("MAX_BULK_SENTENCES", "256"))

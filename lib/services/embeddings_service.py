@@ -35,6 +35,7 @@ def get_provider():
             provider="stub",
             dim=getattr(LOADED_PROVIDER, "dim"),
         )
+
     return LOADED_PROVIDER
 
 # utility functions
