@@ -9,3 +9,7 @@ class Config:
     EMBEDDINGS_PROVIDER = os.getenv("EMBEDDINGS_PROVIDER", "stub").lower() # provider: "stub" or "e5"
     EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "intfloat/multilingual-e5-small")
     EMBEDDING_DEVICE = os.getenv("EMBEDDING_DEVICE", "cpu") # "cpu" or "cuda"
+
+    # Safety net to reject large requests
+    MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", str(2 * 1024 * 1024))) # in bytes
+    MAX_BULK_SENTENCES = int(os.getenv("MAX_BULK_SENTENCES", "256"))

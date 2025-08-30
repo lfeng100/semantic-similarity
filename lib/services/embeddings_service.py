@@ -2,6 +2,7 @@ from typing import List, Tuple
 from flask import current_app
 from lib.services.providers.stub_provider import StubProvider
 from lib.utils.similarity import cosine_similarity
+from lib.logging.structlog import log
 
 LOADED_PROVIDER = None
 
@@ -18,8 +19,22 @@ def get_provider():
             model_name=config.get("EMBEDDING_MODEL_NAME"),
             device=config.get("EMBEDDING_DEVICE"),
         )
+
+        log.info(
+            "Provider set",
+            provider="e5",
+            model=config.get("EMBEDDING_MODEL_NAME"),
+            device=config.get("EMBEDDING_DEVICE"),
+            dim=getattr(LOADED_PROVIDER, "dim"),
+        )
     else:
         LOADED_PROVIDER = StubProvider()
+
+        log.info(
+            "Provider set",
+            provider="stub",
+            dim=getattr(LOADED_PROVIDER, "dim"),
+        )
     return LOADED_PROVIDER
 
 # utility functions
