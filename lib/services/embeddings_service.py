@@ -43,13 +43,17 @@ def embed_passage(sentence):
     provider = get_provider()
     return provider.embed_passages([sentence])[0]
 
+def embed_query(query):
+    provider = get_provider()
+    return provider.embed_query(query)
+
 def embed_passages(sentences):
     provider = get_provider()
     return provider.embed_passages(sentences)
 
 def similarity(sentence_1, sentence_2):
-    a = embed_passage(sentence_1)
-    b = embed_passage(sentence_2)
+    a = embed_query(sentence_1)
+    b = embed_query(sentence_2)
     return cosine_similarity(a, b)
 
 def search(query, sentences):
