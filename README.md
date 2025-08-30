@@ -23,6 +23,14 @@ docker build -t semantic-similarity .
 docker run --rm -p 8080:8080 --env-file .env semantic-similarity
 ```
 
+# Endpoints
+  - `GET /health` – liveness
+  - `GET /ready` – provider status (`stub` or `e5`, vector `dim`)
+  - `GET /embeddings?sentence=...` – single embedding
+  - `POST /embeddings/bulk` – batch embeddings
+  - `POST /embeddings/similarity` – cosine similarity
+  - `POST /embeddings/search` – pick best match by similarity
+
 # Test
 ```pytest -q```
 
